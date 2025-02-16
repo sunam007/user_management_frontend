@@ -15,7 +15,6 @@ import {
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -28,7 +27,7 @@ const UserList = () => {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -36,27 +35,15 @@ const UserList = () => {
     setLoading(true);
 
     try {
-      await axios.put(
-        `http://localhost:8000/api/v1/users/${selectedUser._id}`,
-        formData
-      );
-      setOpenModal(false);
-      fetchUsers(); // Refresh user list after update
+      await axios.put("http://localhost:8000/api/v1/users", {
+        ...formData,
+      });
+      // navigate("/users");
     } catch (error) {
-      console.error("Error updating user:", error);
+      console.error("Error adding user:", error);
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    console.log("selected user >> ", selectedUser);
-  }, [selectedUser]);
-
-  const openEditModal = (user) => {
-    setSelectedUser(user);
-    setFormData(user); // Set form data with user details
-    setOpenModal(true);
   };
 
   // Fetch users from API or localStorage
@@ -144,9 +131,10 @@ const UserList = () => {
                       <Button
                         size="xs"
                         color="blue"
-                        onClick={() => openEditModal(user)}
+                        onClick={() => setOpenModal(true)}
+                        // onClick={() => deleteUser(user?._id)}
                       >
-                        View/Edit
+                        Edit
                       </Button>
                       <Button
                         size="xs"
@@ -171,96 +159,96 @@ const UserList = () => {
         <Modal show={openModal} onClose={() => setOpenModal(false)}>
           <Modal.Header>User Details</Modal.Header>
           <Modal.Body>
-            {users.length > 0 &&
-              users?.map((user) => (
-                <div key={user._id} className="space-y-6">
-                  <form
-                    // onSubmit={handleSubmit}
-                    className="flex max-w-md flex-col gap-4"
-                  >
-                    <div>
-                      <Label htmlFor="name" value="Name" />
-                      <TextInput
-                        id="name"
-                        type="text"
-                        placeholder="John Doe"
-                        required
-                        shadow
-                        value={formData.name || ""}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="email" value="Email" />
-                      <TextInput
-                        id="email"
-                        type="email"
-                        placeholder="example@email.com"
-                        required
-                        shadow
-                        value={user.email}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="PHONE" value="Phone" />
-                      <TextInput
-                        id="phone"
-                        type="text"
-                        placeholder="+880 123 1234"
-                        required
-                        shadow
-                        value={user.phone}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="city" value="City" />
-                      <TextInput
-                        id="city"
-                        type="text"
-                        placeholder="..."
-                        required
-                        shadow
-                        value={user.city}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="state" value="State" />
-                      <TextInput
-                        id="state"
-                        type="text"
-                        placeholder="..."
-                        required
-                        shadow
-                        value={user.state}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="country" value="Country" />
-                      <TextInput
-                        id="country"
-                        type="text"
-                        placeholder="..."
-                        required
-                        shadow
-                        value={user.country}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <Button type="submit" disabled={loading}>
-                      {loading ? "Loading..." : "Edit User"}
-                    </Button>
-                  </form>
-                </div>
-              ))}
+            {users?.map((user) => (
+              <div className="space-y-6">
+                <form
+                  // onSubmit={handleSubmit}
+                  className="flex max-w-md flex-col gap-4"
+                >
+                  <div>
+                    <Label htmlFor="name" value="Name" />
+                    <TextInput
+                      id="name"
+                      type="text"
+                      placeholder="John Doe"
+                      required
+                      shadow
+                      defaultValue={user.name}
+                      value={formData.name}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email" value="Email" />
+                    <TextInput
+                      id="email"
+                      type="email"
+                      placeholder="example@email.com"
+                      required
+                      shadow
+                      value={user.email}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="PHONE" value="Phone" />
+                    <TextInput
+                      id="phone"
+                      type="text"
+                      placeholder="+880 123 1234"
+                      required
+                      shadow
+                      value={user.phone}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="city" value="City" />
+                    <TextInput
+                      id="city"
+                      type="text"
+                      placeholder="..."
+                      required
+                      shadow
+                      value={user.city}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="state" value="State" />
+                    <TextInput
+                      id="state"
+                      type="text"
+                      placeholder="..."
+                      required
+                      shadow
+                      value={user.state}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="country" value="Country" />
+                    <TextInput
+                      id="country"
+                      type="text"
+                      placeholder="..."
+                      required
+                      shadow
+                      value={user.country}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <Button type="submit" disabled={loading}>
+                    {loading ? "Loading..." : "Edit User"}
+                  </Button>
+                </form>
+              </div>
+            ))}
           </Modal.Body>
           <Modal.Footer>
-            {/* <Button color="blue" onClick={() => setOpenModal(false)}>
+            <Button color="blue" onClick={() => setOpenModal(false)}>
               Confirm Edit
-            </Button> */}
+            </Button>
             <Button color="failure" onClick={() => setOpenModal(false)}>
               Cancel
             </Button>

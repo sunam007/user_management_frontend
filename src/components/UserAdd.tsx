@@ -7,6 +7,7 @@ const UserAdd = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     city: "",
     state: "",
     country: "",
@@ -26,6 +27,7 @@ const UserAdd = () => {
       await axios.post("http://localhost:8000/api/v1/users", {
         ...formData,
         password: "A12345",
+        image_url: "https://picsum.photos/200",
       });
       navigate("/users");
     } catch (error) {
@@ -59,6 +61,18 @@ const UserAdd = () => {
             required
             shadow
             value={formData.email}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <Label htmlFor="PHONE" value="Phone" />
+          <TextInput
+            id="phone"
+            type="text"
+            placeholder="+880 123 1234"
+            required
+            shadow
+            value={formData.phone}
             onChange={handleChange}
           />
         </div>
